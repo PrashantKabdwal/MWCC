@@ -61,11 +61,21 @@ to see this page in browser
     <script src="assets/js/jquery.promptu-menu.js"></script>
 
     <script type="text/javascript" src="assets/js/apprise.min.js"></script>
+    <style>* {
+        -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    }
+    
+    body {
+        -webkit-touch-callout: none !important;                /* prevent callout to copy image, etc when tap to hold */
+        -webkit-text-size-adjust: none !important;             /* prevent webkit from resizing text to fit */
+        -webkit-user-select: none !important;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    }
+    </style>
 </head>
 
 <!--<body ng-app="myApp" ng-controller="MainController">-->
 <body>
-    <style>*{-webkit-tap-highlight-color: rgba(0,0,0,0);}</style>
+    
   <style id="customstyle">{{customStyle}}</style>
   <div ng-include="'sidebar.html'" class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar"></div>
 
