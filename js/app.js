@@ -529,6 +529,9 @@ var MyCampusApp = {
             icon = dockIcons[_i];
             _results.push(dock.append(icon.markup));
         }
+        
+        
+        /*icon refresh comment end
         var homedata = $("#homedata");
         homedata.html("");
         var iconwidth = 64;
@@ -558,6 +561,8 @@ var MyCampusApp = {
             direction: 'horizontal',
             pages: true
         });
+        
+        icon refresh comment end*/
         //End AK
         /*
          if(window.device) {
