@@ -93,5 +93,11 @@
                 <string>Allow GPS</string>
             </array>
         </gap:config-file>
+  
+  <!--REMOVE THIS FROM NEXT APPSTORE UPDATE -- start -->
+        
+        <gap:config-file platform="ios" parent="CFBundleVersion"><string>1.0.0</string></gap:config-file>
+        
+   <!--REMOVE THIS FROM APPSTORE NEXT UPDATE -- start -->
         
     </widget>
