@@ -9,7 +9,6 @@
     $.fn.promptumenu = function(options) {
 
         // Here goes
-
         var settings = $.extend({
             'columns': 3,
             'rows': 4,
@@ -39,6 +38,9 @@
             var methods = {
                 //navigating to a specific page
                 go_to: function(index, easing, webkit){
+					/* AK Added for icon fix Start */
+					MyCampusApp.currentPage = index;
+					/* AK Added for icon fix End */
                     if (easing === undefined){
                         easing = 'swing';
                     }
@@ -203,7 +205,7 @@
 
                     //bind the nav buttons to navigate to the specific page
                     $this.parent('div.promptumenu_window').find('.promptumenu_nav a').bind('click.promptumenu', function(){
-                        methods.go_to($(this).index() + 1);
+                        methods.go_to($(this).index() + 1,'inertia', true);
                     });
                 }
 
@@ -502,6 +504,15 @@
                     //apparently this browser wont support swiping
                     //alert(error);
                 }
+                /* AK Added for icon fix Start */
+                try {
+					if(MyCampusApp.currentPage <= cells.pages) {
+            		    methods.go_to(MyCampusApp.currentPage,'inertia', true);
+					}
+				}catch(ex ) {
+					//alert ("Error : " + ex);
+				}
+				/* AK Added for icon fix end */
             }
         });
 

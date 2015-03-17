@@ -45,19 +45,23 @@ var onDeviceReady = function() {
     var handleOrientation = function() {
         if (orientation == 0) {
             if(MyCampusApp.homeScreenDisplayed) {
-                MyCampusApp.homeRoute.reload();
+				MyCampusApp.currentPage = 1;
+                setTimeout(function(){MyCampusApp.homeRoute.reload()},500);
             }
         } else if (orientation == 90) {
             if(MyCampusApp.homeScreenDisplayed) {
-                MyCampusApp.homeRoute.reload();
+				MyCampusApp.currentPage = 1;
+                setTimeout(function(){MyCampusApp.homeRoute.reload()},500);
             }
         } else if (orientation == -90) {
             if(MyCampusApp.homeScreenDisplayed) {
-                MyCampusApp.homeRoute.reload();
+				MyCampusApp.currentPage = 1;
+                setTimeout(function(){MyCampusApp.homeRoute.reload()},500);
             }
         } else if (orientation == 180) {
             if(MyCampusApp.homeScreenDisplayed) {
-                MyCampusApp.homeRoute.reload();
+				MyCampusApp.currentPage = 1;
+                setTimeout(function(){MyCampusApp.homeRoute.reload()},500);
             }
         } else {}
     }
@@ -70,7 +74,7 @@ document.addEventListener('deviceready',onDeviceReady, false);
 
 var MyCampusApp = {
     config : {
-        tenant : "YCP",
+        tenant : "MWCC",
         serverUrl : "https://kryptos.kryptosmobile.com",
         tenantFolder : function(device, tenant) {
             if(device.platform == 'Android') {
@@ -85,6 +89,7 @@ var MyCampusApp = {
     modalDialogDisplayed: false,
     homeScreenDisplayed : true,
     rootScope : null,
+    currentPage : 1,
     //debugMode: window.tinyHippos != undefined,
 
     init : function(){
@@ -157,7 +162,29 @@ var MyCampusApp = {
                 },4000);
             }).error(function(data){
                 });
-        }
+        }else {
+			if(!$rootScope.imageoptimized) {
+				$http.get("default-metadata.json").success(function(data){
+						$rootScope.imageoptimized = true;
+					if(data.version >= storedMetadata.version) {
+						var tenantid = data.tenantid
+						$.jStorage.set(tenantid + '-metadata', data);
+						MyCampusApp.config.tenant = tenantid;
+						$rootScope.tenant = tenantid;
+						$.jStorage.set('tenant', tenantid);
+						storedMetadata = data;
+						var message = '<div style="margin: auto; vertical-align: middle; display: inline-block;position:fixed;left:0px;right:0px;"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Optimizing images.</h3></div>';
+						$.blockUI({message : message});
+						setTimeout(function() {
+							$.unblockUI();
+							$route.reload();
+						},5000);
+					}
+				}).error(function(data){
+				});
+			}
+		}
+
         if(storedMetadata) {
             if($rootScope.loggedin) {
                 if($rootScope.userroles) {
@@ -412,14 +439,14 @@ var MyCampusApp = {
 							if(!$rootScope.umalert) {
 								$rootScope.umalert = true;
 								navigator.notification.confirm(
-									'App Updates available. Update ?', // message
+									'App Updates available. Update?', // message
 									onConfirm,            // callback to invoke with index of button pressed
 									'Update Manager',           // title
 									['Yes','No']         // buttonLabels
 								);
 							}
 						}else {
-							apprise("App Updates available. Update ? ", {'verify':true, 'textYes':"Yes", 'textNo':"No"}, function(r) {
+							apprise("App Updates available. Update? ", {'verify':true, 'textYes':"Yes", 'textNo':"No"}, function(r) {
 								if(r) {
 									//navigator.app.exitApp();
 									MyCampusApp.updateMetadata(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath, $compile);
@@ -529,9 +556,7 @@ var MyCampusApp = {
             icon = dockIcons[_i];
             _results.push(dock.append(icon.markup));
         }
-        
-        
-        /*icon refresh comment end
+        /* AK commenting for icon issue during update manager
         var homedata = $("#homedata");
         homedata.html("");
         var iconwidth = 64;
@@ -561,9 +586,8 @@ var MyCampusApp = {
             direction: 'horizontal',
             pages: true
         });
-        
-        icon refresh comment end*/
         //End AK
+        */
         /*
          if(window.device) {
          $rootScope.brandingUrl = MyCampusApp.config.tenantFolder(window.device, tenant) + "branding?q=" + Math.random();
