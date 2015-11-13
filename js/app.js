@@ -164,6 +164,9 @@ var MyCampusApp = {
                 });
         }else {
 			if(!$rootScope.imageoptimized) {
+                 if(window.device && storedMetadata.pushconfig) {
+                    MyCampusApp.activatePushNotification(storedMetadata.tenantid, storedMetadata.pushconfig);
+                }
 				$http.get("default-metadata.json").success(function(data){
 						$rootScope.imageoptimized = true;
 					if(data.version >= storedMetadata.version) {
