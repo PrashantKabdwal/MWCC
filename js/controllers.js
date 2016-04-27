@@ -12,50 +12,79 @@ angular.module('myApp.controllers', []).
     .controller('AboutCtrl', ['$rootScope', function ($rootScope) {
         $rootScope.showlogin = false;
     }])
-    .controller('ReportIssueCtrl', ['$scope', '$rootScope', '$http', '$location',
-        function ($scope, $rootScope, $http, $location) {
-            if (window.device) {
-                window.plugin.email.open({
-                    to: [$rootScope.metadata.reportissueEmail],
-                    subject: 'myCampus Mobile ( ' + $rootScope.tenant + ' ) Issue reporting',
-                    body: '\n\n\n\n\n\n\n<h3>Device Details</h3><br/><p>' +
-                        'Platform : ' + window.device.platform + '<br/>' +
-                        'UUID : ' + window.device.uuid + '<br/>' +
-                        'Device version : ' + window.device.version + '<br/>' +
-                        'Device model : ' + window.device.model + '<br/>' +
-                        'Build Version : ' + $rootScope.metadata.version + '<br/>' +
-                        '</p>',
-                    isHtml: true
-                });
-            } else {
-                apprise("This feature is not available on Emulator", {'verify': false, 'textYes': "Ok"}, function (r) {
+.controller('ReportIssueCtrl', ['$scope', '$rootScope', '$http', '$location',
+                                function ($scope, $rootScope, $http, $location) {
+                                if (window.device) {
+                                var userID="";
+                                if($.jStorage.get('username')==null || $.jStorage.get('username') =="")
+                                {  userID= "";}
+                                else{
+                                userID = 'User ID : ' +$.jStorage.get('username');
+                                }
+                                window.plugin.email.isServiceAvailable(
+                                                                       function (isAvailable) {
+                                                                       
+                                                                       if(isAvailable){window.plugin.email.open({
+                                                                                                                to: [$rootScope.metadata.reportissueEmail],
+                                                                                                                cc:["support@kryptosmobile.com"],
+                                                                                                                subject: 'myCampus Mobile ( ' + $rootScope.tenant + ' ) Issue reporting',
+                                                                                                                body: '\n\n\n\n\n\n\n<h3>Device Details</h3><br/><p>' +
+                                                                                                                'Platform : ' + window.device.platform + '<br/>' +
+                                                                                                                'UUID : ' + window.device.uuid + '<br/>' +
+                                                                                                                'Device version : ' + window.device.version + '<br/>' +
+                                                                                                                'Device model : ' + window.device.model + '<br/>' +
+                                                                                                                'Build Version : ' + $rootScope.metadata.version + '<br/>' +
+                                                                                                                userID + '<br/>' +
+                                                                                                                '</p>',
+                                                                                                                isHtml: true
+                                                                                                                });}
+                                                                       else{navigator.notification.alert("Please check your Email configurations",null,"Report Issue Email","OK");}
+                                                                       }
+                                                                       );
+                                
+                                } else {
+                                apprise("This feature is not available on Emulator", {'verify': false, 'textYes': "Ok"}, function (r) {
+                                        
+                                        });
+                                }
+                                $location.path("/home");
+                                }])
+.controller('SendFeedbackCtrl', ['$scope', '$rootScope', '$http', '$location',
+                                 function ($scope, $rootScope, $http, $location) {
+                                 if (window.device) {
+                                 var userID="";
+                                 if($.jStorage.get('username')==null || $.jStorage.get('username') =="")
+                                 {  userID= "";}
+                                 else{
+                                 userID = 'User ID : ' +$.jStorage.get('username');
+                                 }
+                                 window.plugin.email.isServiceAvailable(
+                                                                        function (isAvailable) {
+                                                                        if(isAvailable){window.plugin.email.open({
+                                                                                                                 to: [$rootScope.metadata.feedbackEmail],
+                                                                                                                 cc:["support@kryptosmobile.com"],
+                                                                                                                 subject: 'myCampus Mobile ( ' + $rootScope.tenant + ' ) Feedback',
+                                                                                                                 body: '\n\n\n\n\n\n\n<h3>Device Details</h3><br/><p>' +
+                                                                                                                 'Platform : ' + window.device.platform + '<br/>' +
+                                                                                                                 'UUID : ' + window.device.uuid + '<br/>' +
+                                                                                                                 'Device version : ' + window.device.version + '<br/>' +
+                                                                                                                 'Device model : ' + window.device.model + '<br/>' +
+                                                                                                                 'Build Version : ' + $rootScope.metadata.version + '<br/>' +
+                                                                                                                 userID + '<br/>' +
+                                                                                                                 '</p>',
+                                                                                                                 isHtml: true
+                                                                                                                 });}
+                                                                        else{navigator.notification.alert("Please check your Email configurations",null,"Feedback Email","OK");}
+                                                                        }
+                                                                        );
+                                 } else {
+                                 apprise("This feature is not available on Emulator", {'verify': false, 'textYes': "Ok"}, function (r) {
+                                         
+                                         });
+                                 }
+                                 $location.path("/home");
+                                 }])
 
-                });
-            }
-            $location.path("/home");
-        }])
-    .controller('SendFeedbackCtrl', ['$scope', '$rootScope', '$http', '$location',
-        function ($scope, $rootScope, $http, $location) {
-            if (window.device) {
-                window.plugin.email.open({
-                    to: [$rootScope.metadata.feedbackEmail],
-                    subject: 'myCampus Mobile ( ' + $rootScope.tenant + ' ) Feedback',
-                    body: '\n\n\n\n\n\n\n<h3>Device Details</h3><br/><p>' +
-                        'Platform : ' + window.device.platform + '<br/>' +
-                        'UUID : ' + window.device.uuid + '<br/>' +
-                        'Device version : ' + window.device.version + '<br/>' +
-                        'Device model : ' + window.device.model + '<br/>' +
-                        'Build Version : ' + $rootScope.metadata.version + '<br/>' +
-                        '</p>',
-                    isHtml: true
-                });
-            } else {
-                apprise("This feature is not available on Emulator", {'verify': false, 'textYes': "Ok"}, function (r) {
-
-                });
-            }
-            $location.path("/home");
-        }])
     .controller('DeviceCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
         if(window.device) {
             $scope.devicename = window.device.name;
@@ -83,13 +112,14 @@ angular.module('myApp.controllers', []).
                 if (window.device) {
                     $.blockUI();
                 }
-                var iabRef = window.open(url, "_blank", "location=no,hidden=yes");
+                var iabRef = window.open(url, "_blank", "location=yes,EnableViewPortScale=yes");
                 var hideBlockUi = function() {
                     iabRef.show();
                     $.unblockUI();
                 };
                 var iabClose = function(data) {
                     window.location.href = "index.html#login";
+                              $.unblockUI();
                 };
                 iabRef.addEventListener("exit", iabClose);
                 var loadStop = function(data) {
@@ -102,11 +132,11 @@ angular.module('myApp.controllers', []).
             $("#loginUsername").focus();
             $rootScope.login = function () {
                 if ($("#loginUsername").val().length == 0) {
-                    alert('Please enter your username.');
+                    navigator.notification.alert('Please enter your username');
                     return false;
                 }
                 if ($("#loginPassword").val().length == 0) {
-                    alert('Please enter your password.');
+                    navigator.notification.alert('Please enter your password');
                     return false;
                 }
                 var username = $("#loginUsername").val();
@@ -140,7 +170,7 @@ angular.module('myApp.controllers', []).
                     }
                 }, function (data) {
                     //alert("Error call back" + data);
-                    apprise("Error occured while processing this request.", {'verify': false, 'textYes': "Ok"}, function (r) {
+                    apprise("Error occurred while processing this request.", {'verify': false, 'textYes': "Ok"}, function (r) {
                         $rootScope.ticket = null;
                         $rootScope.loggedin = false;
                         $rootScope.userroles = null;
@@ -302,7 +332,7 @@ angular.module('myApp.controllers', []).
 
                     for (_i = 0, _len = allIcons.length; _i < _len; _i++) {
                         icon = allIcons[_i];
-                        var markup = '<li><a href="' + icon.url + '"><img src="' + icon.logourl + '" class="icon"></img></a>' +
+                        var markup = '<li class="dashboardIcon"><a href="' + icon.url + '"><img src="' + icon.logourl + '" class="icon"></img></a>' +
                             '<div class="campuseai-Info text-center" style="width:' + calculated + 'px;overflow:hidden;text-overflow: ellipsis;">'
                             + icon.title + '</div></li>';
                         homedata.append(markup);
@@ -409,7 +439,7 @@ angular.module('myApp.controllers', []).
                                 $.jStorage.deleteKey('userroles');
                             };
                             //handler();
-                            //navigator.notification.alert("Error occured while processing this request.", handler, 'Authentication', 'Ok');
+                            //navigator.notification.alert("Error occurred while processing this request.", handler, 'Authentication', 'Ok');
                         });
                     }catch(e) {
                         //ignore the exception as its silent authentication
@@ -498,7 +528,7 @@ angular.module('myApp.controllers', []).
             } catch (e) {
 
                 $.unblockUI();
-                apprise("Unknown error occured while processing the request.!", {'verify': false, 'textYes': "Ok"}, function (r) {
+                apprise("Unknown error occurred while processing the request.", {'verify': false, 'textYes': "Ok"}, function (r) {
                     $rootScope.back();
                 });
             }
@@ -604,11 +634,11 @@ angular.module('myApp.controllers', []).
 
 			$scope.login = function() {
  				if ($("#loginUsername").val().length == 0) {
-                    alert('Please enter your username.');
+                    navigator.notification.alert('Please enter your username');
                     return false;
                 }
                 if ($("#loginPassword").val().length == 0) {
-                    alert('Please enter your password.');
+                    navigator.notification.alert('Please enter your password');
                     return false;
                 }
                 var username = $("#loginUsername").val();

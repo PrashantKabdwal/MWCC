@@ -659,7 +659,7 @@ var MyCampusApp = {
             $.unblockUI();
             console.log("ERROR");
             console.log(JSON.stringify(e));
-            alert ("Error inside onError : " + JSON.stringify(e));
+            //alert ("Error inside onError : " + JSON.stringify(e));
 
         };
 
