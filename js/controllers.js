@@ -10,6 +10,7 @@ angular.module('myApp.controllers', []).
 
     }])
     .controller('AboutCtrl', ['$rootScope', function ($rootScope) {
+        $rootScope.appDisplayName = "About";
         $rootScope.showlogin = false;
     }])
 .controller('ReportIssueCtrl', ['$scope', '$rootScope', '$http', '$location',
@@ -86,6 +87,8 @@ angular.module('myApp.controllers', []).
                                  }])
 
     .controller('DeviceCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+        
+                               $rootScope.appDisplayName = "Device Info";
         if(window.device) {
             $scope.devicename = window.device.name;
             $scope.deviceuuid = window.device.uuid;
@@ -104,6 +107,7 @@ angular.module('myApp.controllers', []).
     }])
     .controller('LoginCtrl', ['$scope', '$rootScope', '$http', '$location',
         function ($scope, $rootScope, $http, $location) {
+                              MyCampusApp.homeScreenDisplayed=false;
             $rootScope.back = function () {
                 $location.path("/home");
             };
@@ -188,6 +192,7 @@ angular.module('myApp.controllers', []).
     .controller('SettingsCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile) {
             //$scope.serverUrl = "http://localhost:8081/";
+            $rootScope.appDisplayName = "Settings";
             $rootScope.showlogin = false;
             $scope.serverUrlChange = function () {
                 $rootScope.serverUrl = $scope.serverUrl;
@@ -222,23 +227,53 @@ angular.module('myApp.controllers', []).
                 $('#listbtn').attr('class', 'btn btn-befault');
             }
 
-            $scope.resetmyapp = function () {
-                var tenant = MyCampusApp.config.tenant;
-                $.jStorage.deleteKey(tenant + '-metadata');
-                $location.path("/home");
-            }
+                                 $scope.resetApp = function(btn) {
+                                 if (btn == 1) {
+                                 var tenant = MyCampusApp.config.tenant;
+                                 $.jStorage.deleteKey(tenant + '-metadata');
+                                 $location.path("/home");
+                                 $scope.$apply();
+                                 }
+                                 }
+                                 $scope.resetmyapp = function() {
+                                 navigator.notification.confirm("Resetting your app clears all information associated with your app and initializes it with the default setting.  You can use this feature if your app is not functioning correctly. This feature requires network connectivity.", $scope.resetApp, 'Reset App', ['Yes', 'No']);
+                                 }
         }])
     .controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile) {
             //alert("Home controller called..");
             //alert ("Home Controller called");
             //setTimeout(function () {
+                             
+                             
+                             if(!$rootScope.hamburgerEvent)
+                             {
+                                $rootScope.$on("mobile-angular-ui.toggle.toggled", function(event, data) {
+                                            //alert(JSON.stringify(data));
+                                            if(data == "mainSidebar"){
+                                            if($rootScope.blackOverlay == undefined || $rootScope.blackOverlay == null){
+                                            $rootScope.blackOverlay=false;
+                                            }
+                                            if($rootScope.blackOverlay == false){
+                                            $rootScope.blackOverlay=true;
+                                            }else{
+                                            $rootScope.blackOverlay=false;
+                                            }
+                                            $rootScope.$apply();
+                                             }
+                                            
+                                            });
+                             
+                                $rootScope.hamburgerEvent=true;
+                             }
+                             
 
-
+                            
+                             
             if(!$rootScope.homeDownloadCompleteAdded) {
                 $rootScope.$on("onDownloadComplete", function(event, data) {
                     $.unblockUI();
-                    $route.reload();
+                    //$route.reload();
                     $rootScope.$apply(function () {
                         $location.path("/home");
                     });
@@ -450,6 +485,16 @@ angular.module('myApp.controllers', []).
     .controller('AppCtrl', ['$scope', '$routeParams', '$compile', '$http', '$rootScope', '$sce', '$window',
         '$location',
         function ($scope, $routeParams, $compile, $http, $rootScope, $sce, $window, $location) {
+            $rootScope.myswiperight = function() {    
+                if (!$("body").hasClass("sidebar-left-in")) {
+                    $rootScope.toggle("mainSidebar");
+                }                          
+            }
+            $rootScope.myswipeleft = function() {
+                if ($("body").hasClass("sidebar-left-in")) {
+                    $rootScope.toggle("mainSidebar");
+                }                
+            }
             MyCampusApp.homeScreenDisplayed = false;
             $scope.appname = $routeParams.appid;
             $scope.pageid = $routeParams.pageid;
@@ -582,9 +627,10 @@ angular.module('myApp.controllers', []).
 			$rootScope.appDisplayName = "KRYPTOS AppMaker";
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
-				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading ..!!</h3></div>';
-				$.blockUI({message : message});
-
+				//var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading ..!!</h3></div>';
+				//$.blockUI({message : message});
+                                   $.blockUI();
+                                   
 				$http.get(url + "/api/mobapp/listMyApps?token=" + token).
 					success(function (dt) {
 						//alert ("List Apps data : " + d1);
@@ -651,9 +697,9 @@ angular.module('myApp.controllers', []).
 					    errorCB, 'No Network', 'Ok');
 					return;
 				}
-				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Authenticating</h3></div>';
-				$.blockUI({message : message});
-
+				//var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Authenticating</h3></div>';
+				//$.blockUI({message : message});
+                                   $.blockUI();
 				$http.post(url + "/api/authenticate" , {username : username, password : password}).
 					success(function(data) {
 						$rootScope.klogin = true;
@@ -718,9 +764,9 @@ angular.module('myApp.controllers', []).
 					return;
 				}
 
-			var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading the App..</h3></div>';
-			$.blockUI({message : message});
-
+			//var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading the App..</h3></div>';
+			//$.blockUI({message : message});
+                               $.blockUI();
 				var baseUrl = MyCampusApp.config.serverUrl;
 				$.jStorage.deleteKey(tenant + '-metadata');
 				var processLogosDir = function (logosDir) {
@@ -759,9 +805,9 @@ angular.module('myApp.controllers', []).
 			$rootScope.kappid;
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApplications = function(token) {
-				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
-				$.blockUI({message : message});
-
+				//var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
+				//$.blockUI({message : message});
+                                     $.blockUI();
 				$http.get(url + "/api/mobapp/appFeatures?id=" + $rootScope.kappid + "&token=" + token).
 					success(function (d1) {
 						$scope.appFeatures = d1;
