@@ -1,5 +1,5 @@
 {
-  "version": 809,
+  "version": 810,
   "tenantid": "MWCC",
   "mobappid": 119,
   "appName": "myMWCC",
@@ -783,7 +783,7 @@
         {
           "pageid": "VideosVideosDetails",
           "pageTemplate": "<div><\/div>",
-          "pageprocessor": "function pageprocessorVideosVideosDetails(pagedef, $scope, $routeParams, $compile, $http, $rootScope, $sce, $window, $location) {\r\n    var video = $rootScope.videos[$routeParams.index];\r\n\tvar videoID=video.id.videoId\r\n    \r\n  var url=\"https://www.googleapis.com/youtube/v3/videos?id=\"+videoID+\"&key=AIzaSyCe0sXjvLPhHFEYFRe3_2W2N1XINaSWzbk&part=snippet,contentDetails,statistics,status\";\r\n  $http.get(url).success(function(data) {\r\n    \r\n     console.log(JSON.stringify(data));\r\n    $scope.title = data.items[0].snippet.localized.title;\r\n    \r\n    $scope.trustSrc = function() {\r\n        return $sce.trustAsResourceUrl(\"https://www.youtube.com/embed/\" + videoID);\r\n    };\r\n    $scope.description = data.items[0].snippet.localized.description;\r\n    \r\n    var data1 = $compile($(pagedef.datatemplate))($scope);\r\n    $(\"#appContent\").append(data1);\r\n    \r\n    }).error(function(data) {\r\n        $.unblockUI();\r\n    });\r\n  \r\n}",
+          "pageprocessor": "function pageprocessorVideosVideosDetails(pagedef, $scope, $routeParams, $compile, $http, $rootScope, $sce, $window, $location) {\r\n  var video = $rootScope.videos[$routeParams.index];\r\n  var videoID = video.id.videoId\r\n\r\n  var url = \"https://www.googleapis.com/youtube/v3/videos?id=\" + videoID + \"&key=AIzaSyCe0sXjvLPhHFEYFRe3_2W2N1XINaSWzbk&part=snippet,contentDetails,statistics,status\";\r\n  $http.get(url).success(function(data) {\r\n\r\n    console.log(JSON.stringify(data));\r\n    $scope.title = data.items[0].snippet.localized.title;\r\n\r\n    $scope.trustSrc = function() {\r\n      return $sce.trustAsResourceUrl(\"https://www.youtube.com/embed/\" + videoID);\r\n    };\r\n    $scope.description = data.items[0].snippet.localized.description;\r\n\r\n    var data1 = $compile($(pagedef.datatemplate))($scope);\r\n    $(\"#appContent\").append(data1);\r\n\r\n  }).error(function(data) {\r\n    $.unblockUI();\r\n  });\r\ntry {\r\n    var onPause = function() {\r\n      $('iframe').attr('src', $('iframe').attr('src'));\r\n    }\r\n\r\n    document.addEventListener(\"pause\", onPause, false);\r\n  } catch (e) {\r\n    // alert(e)\r\n  }\r\n}",
           "datatemplate": "<div class=\"container\"><h4 style=\"color:#fff;\">{{title}}<\/h4><div style=\"align:center\"><iframe class=\"well\" ng-src=\"{{trustSrc()}}\" frameborder=\"0\" allowfullscreen target=\"self\"><\/iframe><\/div><h5 style=\"color:#fff;\">{{description}}<\/h5><\/div>"
         }
       ]
