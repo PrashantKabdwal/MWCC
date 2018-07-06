@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id = "com.kryptosmobile.MWCC" version   = "1.1.1"  versionCode = "10102">
+        id = "com.kryptosmobile.MWCC" version   = "1.1.2"  versionCode = "10102">
         <name>MWCC iConnect</name>
         <description>MWCC mobile App</description>
         <author href="http://kryptosmobile.com" email="info@kryptosmobile.com">Kryptos Mobile Team</author>
@@ -97,8 +97,8 @@
         
         <gap:plugin name="cordova-plugin-device" source="npm"/>
         <gap:plugin name="cordova-plugin-dialogs" source="npm" />
-        <gap:plugin name="cordova-plugin-file" source="npm"/>
-        <gap:plugin name="cordova-plugin-file-transfer" source="npm" />
+        <gap:plugin name="cordova-plugin-file" source="npm" spec="4.0.0" />
+        <gap:plugin name="cordova-plugin-file-transfer" source="npm" spec="1.6.3"/>
         <gap:plugin name="cordova-plugin-geolocation" source="npm" />
         <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
         <gap:plugin name="cordova-plugin-network-information" source="npm" />
